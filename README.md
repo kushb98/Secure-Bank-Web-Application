@@ -1,5 +1,3 @@
-# IS601-
-IS601-004
+IS601-004 Spring'23
 Kush Borikar
-I am International Graduate Student from a town called Nagpur in India. My major is Cybersecurity and Privacy.
-
+I am an International Graduate Student and my major is Cybersecurity and Privacy
