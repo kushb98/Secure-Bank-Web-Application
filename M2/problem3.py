@@ -1,3 +1,6 @@
+"""kb97
+   5th Feb 2023
+   Code for converting and printing positive elements out of an array without changing their data typesclea"""
 a1 = [-1, -2, -3, -4, -5, -6, -7, -8, -9, -10]
 a2 = [-1, 1, -2, 2, 3, -3, -4, 5]
 a3 = [-0.01, -0.0001, -.15]
