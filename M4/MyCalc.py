@@ -5,18 +5,30 @@ class MyCalc:
 
     def __init__(self):
         self.ans = 0
+        #UCID: kb97 - Kush Borikar
+        #Date: 23rd Feb 2023
+        #this initializes the value of ans to 0    
 
     def add(self,x,y):
         ans = x + y
         return ans
+        #this function performs the addition operation on operands
+        # UCID: kb97 - Kush Borikar
+        #Date: 23rd Feb 2023  
 
     def sub(self,x,y):
         ans = x - y      
         return ans
+        #this function performs the substraction operation on operands
+        # UCID: kb97 - Kush Borikar
+        #Date: 23rd Feb 2023 
     
     def mul(self,x,y):
         ans = x * y 
         return ans
+        #this function performs the multiplication operation on operands
+        # UCID: kb97 - Kush Borikar
+        #Date: 23rd Feb 2023 
 
     def div(self,x,y):
         if y == 0:
@@ -25,18 +37,20 @@ class MyCalc:
         else:
             ans = x / y 
             return ans
-
-# def handle_negative(string):
-#     neg_string = string
-#     newString = neg_string.replace("-","")
-#     return newString 
+        #this function performs the division operation on operands and also handles division by 0 
+        # UCID: kb97 - Kush Borikar
+        #Date: 23rd Feb 2023
 
 def float_check (string):
     #Check if string is composed of only characters
+    # UCID: kb97 - Kush Borikar
+    #Date: 23rd Feb 2023
     if string.isnumeric():
         return True
 
-    #Check if string contains decimal and split
+    #Check if string contains decimal point and split
+    # UCID: kb97 - Kush Borikar
+    #Date: 23rd Feb 2023
     parts = string.split('.')
     if len(parts) == 2 and parts[0].isnumeric() and parts[1].isnumeric():
         return True
@@ -51,35 +65,34 @@ def main():
     while True:
         #ask for user input
         user_input = input("Enter a valid equation (e.g. 2 * 3) or Enter 'q' to quit : ").split()
-        #check if user wants to quit
         #splitting input into operator and operands
 
+        #check if user wants to quit
         if 'q' in user_input:
             print("Exiting Calculator...")
             break
 
+        #check if user has entered valid expression
         if len(user_input) != 3:
             print("Error: Invalid input format")
             break
         
+        #if user wants to use previous answer to perform a new expression, this function will handle it
         for i in range(len(user_input)):
             if(user_input[i]=="ans"):
-                user_input[i] = str(calc.ans)
+                user_input[i] = str(calc.ans)        
 
+        #assign input elements to variables
         num1 = user_input[0]
         operator = user_input[1]
-        num2 = user_input[2]
-
-        # if num1[0] == '-':
-        #     num1 = handle_negative(num1)
-        # if num2[0] == '-':
-        #     num2 = handle_negative(num2)    
+        num2 = user_input[2]  
         
+        #this will check if the entred operands are in valid format or not 
         if not float_check(num1) or not float_check(num2):
             print("Error: Invalid operands - Try Again")       
 
         else:
-
+            #convert operands to float for arithmetic functions
             num1 = float(num1)
             num2 = float(num2)
 
@@ -107,5 +120,6 @@ def main():
             print("Answer:" , calc.ans)
 
 
+#calling main function
 if __name__ == '__main__':
     main()
