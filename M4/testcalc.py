@@ -3,28 +3,32 @@ from MyCalc import MyCalc
 
 def test_addition():
     calc = MyCalc()
-    result = calc.add(3, 4)
-    assert result == 7
+    assert calc.add(3, 4) == 7
+    assert calc.add(10.25, 11.75) == 22
+    assert calc.add(-11, -44) == -55
 
 def test_subtraction():
     calc = MyCalc()
-    result = calc.sub(10, 5)
-    assert result == 5
+    assert calc.sub(10, 5) == 5
+    assert calc.sub(10, 15) == -5
+    assert calc.sub(-10, 5) == -15
 
 def test_multiplication():
     calc = MyCalc()
-    result = calc.mul(2, 5)
-    assert result == 10
+    assert calc.mul(10, 5) == 50
+    assert calc.mul(10, -15) == -150
+    assert calc.mul(-10, -5) == 50
 
 def test_division():
     calc = MyCalc()
-    result = calc.div(10, 2)
-    assert result == 5
+    assert calc.div(10, 5) == 2
+    assert calc.div(15, -3) == -5
+    assert calc.div(-10, -5) == 2
 
 def test_division_by_zero():
     calc = MyCalc()
-    with pytest.raises(ZeroDivisionError):
-        calc.div(5, 0)
+    # with pytest.raises(ZeroDivisionError):
+    assert calc.div(5, 0) == None
 
 def test_add_to_answer():
     calc = MyCalc()
@@ -54,4 +58,7 @@ def test_div_answer():
     assert calc.div(ans, -2) == -13.5
     assert calc.div(ans, 27) == 1   
 
-#def test_div_answer_by_zero():
+def test_div_answer_by_zero():
+    calc = MyCalc()
+    ans = 10
+    assert calc.div(ans, 0) == None
