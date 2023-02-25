@@ -74,13 +74,18 @@ def main():
 
         #check if user has entered valid expression
         if len(user_input) != 3:
-            print("Error: Invalid input format")
+            print("Error: Invalid input format, Please check correct input format in input prompt")
             break
         
         #if user wants to use previous answer to perform a new expression, this function will handle it
         for i in range(len(user_input)):
             if(user_input[i]=="ans"):
-                user_input[i] = str(calc.ans)        
+                user_input[i] = str(calc.ans)
+
+        for i in range(len(user_input)):
+            if(user_input[i]=="-ans"):
+                user_input[i] = str((calc.ans) * (-1))
+                #user_input = str(calc.ans)           
 
         #assign input elements to variables
         num1 = user_input[0]
