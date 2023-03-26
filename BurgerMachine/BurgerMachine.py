@@ -155,7 +155,8 @@ class BurgerMachine:
 
     def calculate_cost(self):
         # TODO add the calculation expression/logic for the inprogress_burger
-        return 10000
+        cost_of_burger = int(Topping.cost) + int(Bun.cost) + int(Patty.cost)
+        return cost_of_burger
 
     def run(self):
         try:
@@ -188,6 +189,10 @@ class BurgerMachine:
             # quit
             print("Quitting the burger machine")
             sys.exit()
+        
+        except OutOfStockException:
+            print(f"Sorry, {choice} is out of stock. Please make another selection.")
+            self.run()
         # handle OutOfStockException
             # show an appropriate message of what stage/category was out of stock
         # handle NeedsCleaningException
