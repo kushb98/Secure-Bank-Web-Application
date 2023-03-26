@@ -155,8 +155,11 @@ class BurgerMachine:
 
     def calculate_cost(self):
         # TODO add the calculation expression/logic for the inprogress_burger
-        cost_of_burger = int(Topping.cost) + int(Bun.cost) + int(Patty.cost)
-        return cost_of_burger
+        #kb97 | 03/25/23 | This function sums up the cost of all items in the burger and addig the cost of each item. The cost_of_burger is then rounded and returned.
+        cost_of_burger = 0
+        for item in self.inprogress_burger:
+            cost_of_burger += item.cost
+        return round(cost_of_burger, 2)
 
     def run(self):
         try:
@@ -190,22 +193,52 @@ class BurgerMachine:
             print("Quitting the burger machine")
             sys.exit()
         
-        except OutOfStockException:
-            print(f"Sorry, {choice} is out of stock. Please make another selection.")
-            self.run()
         # handle OutOfStockException
             # show an appropriate message of what stage/category was out of stock
+        except OutOfStockException as e:
+            print(f"Sorry, {self.currently_selecting.name} is out of stock. Please make another selection.")
+        #kb97 | 03/25/23 | This function sums up the cost of all items in the burger and adding the cost of each item. The cost_of_burger is then rounded and returned.    
+            
         # handle NeedsCleaningException
             # prompt user to type "clean" to trigger clean_machine()
             # any other input is ignored
             # print a message whether or not the machine was cleaned
+        except NeedsCleaningException as e:
+            clean = input("The machine needs cleaning. Type 'clean' to clean or any other key to ignore.\n")
+            if clean.lower() == "clean":
+                self.clean_machine()
+                print("The machine has been cleaned.")
+            else:
+                print("The machine was not cleaned, enter proper input to clean it.")
+        #kb97 | 03/26/23 | This function cleans the burger machine by prompting the user to enter the word 'clean', if machine is cleaned, a message showing success will be printed, and a message showing failure if it failed to clean
+
         # handle InvalidChoiceException
             # show an appropriate message of what stage/category was the invalid choice was in
+            # show an appropriate message of what stage/category was the invalid choice was in
+        except InvalidChoiceException as e:
+            print(f"Sorry, The option you selected is not a valid choice in {self.currently_selecting.name}.")
+        #kb97 | 03/26/23 | This function will throw an exception if there is an invalid choice being made, for example, toppings are being entred when a bun or patty is being expected
+
         # handle ExceededRemainingChoicesException
             # show an appropriate message of which stage/category was exceeded
             # move to the next stage/category
+        except ExceededRemainingChoicesException as e:
+            print(f"Sorry, you have exceeded the remaining choices in {self.currently_selecting.name}.")
+            if(self.currently_selecting == STAGE.Bun):
+                self.currently_selecting = STAGE.Patty
+            elif(self.currently_selecting == STAGE.Patty):
+                self.currently_selecting = STAGE.Toppings
+            else:
+                self.currently_selecting = STAGE.Pay    
+        #kb97 | 03/26/23 | This function will throw an exception if more than 3 toppings or patties are selected, as the max selection limit for these things is 3.
+
+
         # handle InvalidPaymentException
             # show an appropriate message
+        except InvalidPaymentException as e:
+            print(f"Sorry, your payment  is invalid.")
+        #kb97 | 03/26/23 | This execption happens when the exact amount indiciated on the screen is not input.    
+
         except:
             # this is a default catch all, follow the steps above
             print("Something went wrong")
