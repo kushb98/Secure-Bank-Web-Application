@@ -207,3 +207,4 @@ def test8_burger_increment(machine):
     machine.handle_pay(2.25,'2.25')
     expected_total_burgers = 4
     assert(expected_total_burgers==machine.total_burgers)
+#kb97 | 03/27/23 | This test case is checking if the expected total burgers and the machine total burgers match to see if burgers are incrementing after each purchase
