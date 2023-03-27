@@ -233,14 +233,14 @@ class BurgerMachine:
                 self.currently_selecting = STAGE.Toppings
             else:
                 self.currently_selecting = STAGE.Pay    
-        #kb97 | 03/26/23 | This function will throw an exception if more than 3 toppings or patties are selected, as the max selection limit for these things is 3.
+        #kb97 | 03/27/23 | This function will throw an exception if more than 3 toppings or patties are selected, as the max selection limit for these things is 3.
 
 
         # handle InvalidPaymentException
             # show an appropriate message
         except InvalidPaymentException as e:
             print(f"Sorry, your payment  is invalid.")
-        #kb97 | 03/26/23 | This execption happens when the exact amount indiciated on the screen is not input.    
+        #kb97 | 03/27/23 | This execption happens when the exact amount indiciated on the screen is not input.    
 
         except:
             # this is a default catch all, follow the steps above
