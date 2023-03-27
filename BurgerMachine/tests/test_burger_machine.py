@@ -48,20 +48,20 @@ def test_production_line(second_order):
 def test1_first_bun(machine):
     previous_inprog_burger = len(machine.inprogress_burger)
     try:
-        machine.pick_patty('veggie')
-        machine.pick_toppings('tomato')
+        machine.pick_patty('turkey')
+        machine.pick_toppings('mustard')
     except InvalidStageException:
         assert(True)
     finally:
         assert(previous_inprog_burger == len(machine.inprogress_burger))
-# hip2 and 03/20/23 Description: This method first counts the length of the inprogress burger then adds patty and toppings in the try block, but as patty and toppings can not 
-# be added until a selection of bun is made that's why its going in exception state ie.InvalidStageException and in finally the len of inprogress burger(previous one we counted in 
+#kb97 | 03/27/23 | This test case method counts the length of the inprogress burger then adds patty and toppings in the try block, since patty and toppings can not 
+# be added until a selection of bun is made, it's going in exception state ie.InvalidStageException and in finally the len of inprogress burger(previous one we counted in 
 # beginning) is matched with current's inprogress burger length in assert so the test case will work if only those two matched. 
 
 def test2_patty_in_stock(machine):
     machine.patties[0].quantity = 0
     name = machine.patties[0].name.lower()
-    machine.handle_bun('no bun')
+    machine.handle_bun('wheat burger bun')
     previous_inprog_burger = len(machine.inprogress_burger)
     #machine.currently_selecting = BurgerMachine.STAGE.patties
     try:
@@ -70,9 +70,8 @@ def test2_patty_in_stock(machine):
         assert(True)
     finally:
         assert(previous_inprog_burger == len(machine.inprogress_burger))   
-# hip2 and 03/20/23 Description: This test case determines whether or not a patty is in stock, so to test it, I set the amount of the first patty, Turkey, to zero and sent it to 
-# the name variable and the amount is set to zero before selecting a bun using the machine, and in the try block, I choose this patty which wont execute and go to catch block
-# and function should issue an OutOfStockException and if it does, the test case is successful. Also the same finally state is executed in every test case.
+#kb97 | 03/27/23 | This test case checks if patty is in stock or not, so I intialized one of the patties amount to zero, turkey in this case and then tried running the machine
+# with the nromal selection flow and selecting turkey as my patty, since the patty is out of stock, the OutofStockException will be triggered and the test case will pass.
 
 def test3_topping_in_stock(machine):
     machine.toppings[2].quantity = 0
@@ -88,13 +87,12 @@ def test3_topping_in_stock(machine):
         assert(True)
     finally:
         assert(previous_inprog_burger == len(machine.inprogress_burger))
-## hip2 and 03/20/23 Description: This test case determines whether or not a topping is in stock or not so to test it, I set the amount of the third topping tomato to zero & set it to 
-# the name variable and the amount is set to zero before selecting a bun using the machine. then i added bun and patties and finally in the try block, I choose this tomato which 
-# wont execute and go to catch blockand function should issue an OutOfStockException and if it does, the test case is successful. Also the same finally state is executed in every
-# test case.
+#kb97 | 03/27/23 | This test case checks if a topping is in stock or not, so I intialized one of the toppings amount to zero, tomato in this case and then tried running the machine
+# with the normal selection flow (bun first then a patty) and selecting tomato as my topping, since the topping is out of stock, the OutofStockException will be triggered and the test case will pass.
+
         
-def test_4_add_3_patties(machine):
-    machine.handle_bun('no bun')
+def test4_add_3_patties(machine):
+    machine.handle_bun('lettuce wrap')
     machine.pick_patty('veggie')
     machine.pick_patty('beef')
     machine.pick_patty('beef')
@@ -105,19 +103,19 @@ def test_4_add_3_patties(machine):
         assert(True)
     finally:
         assert(previous_inprog_burger == len(machine.inprogress_burger))
-## hip2 and 03/20/23 Description:The above test case makes a burger by selecting a bun and three patties, with a maximum limit of three patties per order as number of max patties are initialized to 3 in burgermachine.py
-# After that, I'm calculating the length of the in-progress burger, and in the try except block, I'm adding the fourth patty. If we get the ExceededRemainingChoicesException, 
-# the test case is successful.
+#kb97 | 03/27/23 |The test case makes a burger by selecting a bun and three patties, with a maximum limit of three patties per order as number of max patties are initialized to 3 in burgermachine.py
+#In the try except block, I will add the 4th patty, since the max. number of patties are 3, we get the ExceededRemainingChoicesException, 
+# the test case passes
 
 
-def test_5_add_3_toppings(machine):
-    machine.handle_bun('no bun')
+def test5_add_3_toppings(machine):
+    machine.handle_bun('wheat burger bun')
     machine.handle_patty('beef')
     machine.handle_patty('veggie')
     machine.handle_patty('next')
-    machine.pick_toppings('cheese')
-    machine.pick_toppings('mayo')
-    machine.pick_toppings('ketchup')
+    machine.pick_toppings('mustard')
+    machine.pick_toppings('tomato')
+    machine.pick_toppings('bbq')
     previous_inprog_burger = len(machine.inprogress_burger)
     try:
         machine.pick_toppings('tomato')
@@ -125,9 +123,9 @@ def test_5_add_3_toppings(machine):
         assert(True)
     finally:
         assert(previous_inprog_burger == len(machine.inprogress_burger))
-## hip2 and 03/20/23 Description: The above test case makes a burger by selecting a bun and two patties, then going next and then 3 toppings, with a maximum limit of three topping per order as 
-# number of max topping are initialized to 3 in burgermachine.py. After that, I'm calculating the length of the in-progress burger, and in the try except block, I'm adding the 
-# fourth topping. If we get the ExceededRemainingChoicesException, the test case is successful.
+#kb97 | 03/27/23 |The test case makes a burger by selecting a bun and two patties, and then 3 toppings, with a maximum limit of three toppings per order as number of max toppings are initialized to 3
+#I will try to add a 4th topping in the try block, but since the max. number of toppings are 3, we get the ExceededRemainingChoicesException, 
+# the test case passes
 
 
 def test_6_calculate_cost(machine):
