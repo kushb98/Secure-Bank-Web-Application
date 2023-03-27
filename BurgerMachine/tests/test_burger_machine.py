@@ -128,7 +128,7 @@ def test5_add_3_toppings(machine):
 # the test case passes
 
 
-def test_6_calculate_cost(machine):
+def test6_calculate_cost(machine):
     count = 0
     while count < 4:
         bun = random.randrange(0, 4, 1)
@@ -140,16 +140,16 @@ def test_6_calculate_cost(machine):
         original_price = machine.calculate_cost()
         assert(original_price==random_burger_price)
         count = count + 1
-## hip2 and 03/20/23 Description: The above test case makes a burger out of random items. For this, I used a while loop and a random package that picks a value on its own. I am calculating the 
+#kb97 | 03/27/23 | The above test case makes a burger out of random items. I used a while loop and a random package that picks a value randomly on its own. I am calculating the 
 # cost of the burger which is made by combining the costs of all its randomly selected items and then comparing the calculated cost to the real cost.
 
-def test_7_total_sales(machine):
+def test7_total_sales(machine):
     machine.handle_bun("White Burger Bun")
     machine.handle_patty("veggie")
     machine.handle_patty("beef")
     machine.handle_patty('next')
     machine.handle_toppings("lettuce")
-    machine.handle_toppings("lettuce")
+    machine.handle_toppings("bbq")
     machine.handle_toppings("mayo")
     machine.handle_toppings("done")
     machine.handle_pay(3.75,'3.75')
@@ -171,10 +171,10 @@ def test_7_total_sales(machine):
     machine.handle_pay(1.75,'1.75')
     expected_total_sales = 3.75 + 3.5 + 1.75
     assert(expected_total_sales == machine.total_sales)
-## hip2 and 03/20/23 Description: This test case is making three burgers and calculating the projected cost before comparing it to the actual cost.
+#kb97 | 03/27/23 | This test case is making three burgers and calculating the projected cost before comparing it to the actual cost.
 
 
-def test_8_burger_increment(machine):
+def test8_burger_increment(machine):
     machine.handle_bun("White Burger Bun")
     machine.handle_patty("beef")
     machine.handle_patty('next')
