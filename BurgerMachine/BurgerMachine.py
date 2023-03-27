@@ -155,7 +155,8 @@ class BurgerMachine:
 
     def calculate_cost(self):
         # TODO add the calculation expression/logic for the inprogress_burger
-        #kb97 | 03/25/23 | This function sums up the cost of all items in the burger and addig the cost of each item. The cost_of_burger is then rounded and returned.
+        #kb97 | 03/25/23 | This function sums up the cost of all items in the inprogress-burger array by addings the cost of each item. 
+        #The cost_of_burger is then rounded and returned.
         cost_of_burger = 0
         for item in self.inprogress_burger:
             cost_of_burger += item.cost
@@ -197,7 +198,8 @@ class BurgerMachine:
             # show an appropriate message of what stage/category was out of stock
         except OutOfStockException as e:
             print(f"Sorry, {self.currently_selecting.name} is out of stock. Please make another selection.")
-        #kb97 | 03/25/23 | This function sums up the cost of all items in the burger and adding the cost of each item. The cost_of_burger is then rounded and returned.    
+        #kb97 | 03/25/23 | This function throws an exception when a certain item (patty, topping) is out of stock, since we have define that each item has only 
+        #10 units in stock, once 10 items of a particular topping or patty are used up, this will prompt the user that item is out of stock.   
             
         # handle NeedsCleaningException
             # prompt user to type "clean" to trigger clean_machine()
@@ -210,7 +212,8 @@ class BurgerMachine:
                 print("The machine has been cleaned.")
             else:
                 print("The machine was not cleaned, enter proper input to clean it.")
-        #kb97 | 03/26/23 | This function cleans the burger machine by prompting the user to enter the word 'clean', if machine is cleaned, a message showing success will be printed, and a message showing failure if it failed to clean
+        #kb97 | 03/26/23 | This function cleans the burger machine by prompting the user to enter the word 'clean', if machine is cleaned,
+        # a message showing success will be printed, and a message showing failure if it failed to clean
 
         # handle InvalidChoiceException
             # show an appropriate message of what stage/category was the invalid choice was in
