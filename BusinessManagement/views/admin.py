@@ -34,7 +34,7 @@ def importCSV():
             """
             # DON'T EDIT
             employee_query = """
-            INSERT INTO IS601_MP3_Employees (first_name, last_name, email, company_id)
+             INSERT INTO IS601_MP3_Employees (first_name, last_name, email, company_id)
                         VALUES (%(first_name)s, %(last_name)s, %(email)s, (SELECT id FROM IS601_MP3_Companies WHERE name = %(company_name)s LIMIT 1))
                         ON DUPLICATE KEY UPDATE first_name=%(first_name)s, 
                         last_name = %(last_name)s, email = %(email)s, 
@@ -53,8 +53,8 @@ def importCSV():
                 # TODO importcsv-4 extract employee data and append to employee list 
                 # as a dict only with employee data if all is present
                 
-            
-            
+               
+               
             if len(companies) > 0:
                 print(f"Inserting or updating {len(companies)} companies")
                 try:
@@ -75,7 +75,7 @@ def importCSV():
                     traceback.print_exc()
                     flash("There was an error loading in the csv data", "danger")
             else:
-                # TODO importcsv-8 display flash message (info) that no employees were loaded
+                 # TODO importcsv-8 display flash message (info) that no employees were loaded
                 pass
             try:
                 result = DB.selectOne("SHOW SESSION STATUS LIKE 'questions'")

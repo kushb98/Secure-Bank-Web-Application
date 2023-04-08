@@ -52,3 +52,4 @@ def test_edit_employee(client):
     assert ele.get("value") == '_test2'
     ele = form.select("[name='company']")[0]
     assert int(ele.get("value")) == -1 
+

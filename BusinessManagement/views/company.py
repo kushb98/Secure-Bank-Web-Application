@@ -142,3 +142,4 @@ def delete():
     # TODO delete-5 for all employees assigned to this company set their company_id to None/null
     # TODO delete-6 if id is missing, flash necessary message and redirect to search
     pass
+    
