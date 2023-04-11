@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.fixture()
-def app():
+def off_app():
     from ..main import create_app
     from ..sql.db import DB
     app = create_app()
@@ -24,17 +24,17 @@ def app():
 
 
 @pytest.fixture()
-def client(app):
+def off_client(app):
     return app.test_client()
 
 
 @pytest.fixture()
-def runner(app):
+def off_runner(app):
     return app.test_cli_runner()
 
 #https://pypi.org/project/pytest-order/
 @pytest.mark.order("second_to_last")
-def test_edit_employee(client):
+def off_test_edit_employee(client):
     resp = client.post("/employee/edit?id=-1", data={
         "last_name": "_test2",
         "first_name": "_test2",

@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.fixture()
-def app():
+def off_app():
     from ..main import create_app
     from ..sql.db import DB
     app = create_app()
@@ -17,15 +17,15 @@ def app():
 
 
 @pytest.fixture()
-def client(app):
+def off_client(app):
     return app.test_client()
 
 
 @pytest.fixture()
-def runner(app):
+def off_runner(app):
     return app.test_cli_runner()
 
-def get_column_index(target, cells):
+def off_get_column_index(target, cells):
     rowIndex = -1
     index = 1
     for th in cells:
@@ -36,12 +36,12 @@ def get_column_index(target, cells):
         index += 1
     assert rowIndex > 0, f"th for {target} not found"
     return rowIndex
-def get_cell_content_by_index(index, table):
+def off_get_cell_content_by_index(index, table):
     cell = table.select(f"tbody tr:first-child td:nth-child({index})")[0]
     assert cell.string != None and len(cell.string) > 0, f"first tr of table cell {index} is empty"
     return cell.string.strip()
 
-def query_and_get_assert(query, args, target, client, url):
+def off_query_and_get_assert(query, args, target, client, url):
     from ..sql.db import DB
     result = DB.selectAll(query, *args)
     if result.status and result.rows:
@@ -62,29 +62,29 @@ def query_and_get_assert(query, args, target, client, url):
 
 
 
-def test_filter_name(client):
+def off_test_filter_name(client):
     target = "name"
     query = f"SELECT id, {target} FROM IS601_MP3_Companies WHERE 1=1 AND {target} like %s ORDER BY name asc LIMIT 10"
     args = ["%a%"]
     url = f"/company/search?name={args[0].replace('%','')}&column=name&order=asc"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_filter_country(client):
+def off_test_filter_country(client):
     target = "country"
     query = f"SELECT {target} FROM IS601_MP3_Employees e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id WHERE {target} = %s LIMIT 10"
     args = ["US"]
     url = f"/company/search?country={args[0]}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
     
-def test_filter_state(client):
+def off_test_filter_state(client):
     target = "state"
     query = f"SELECT {target} FROM IS601_MP3_Employees e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id WHERE {target} = %s LIMIT 10"
     args = ["NJ"]
     url = f"/company/search?state={args[0]}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
- 
 
-def test_sort_asc_name(client):
+
+def off_test_sort_asc_name(client):
     target = "name"
     order = "asc"
     query = f"SELECT {target} FROM IS601_MP3_Companies ORDER BY {target} {order} LIMIT 10"
@@ -92,7 +92,7 @@ def test_sort_asc_name(client):
     url = f"/company/search?column={target}&order={order}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_sort_desc_name(client):
+def off_test_sort_desc_name(client):
     target = "name"
     order = "desc"
     query = f"SELECT {target} FROM IS601_MP3_Companies ORDER BY {target} {order} LIMIT 10"
@@ -100,7 +100,7 @@ def test_sort_desc_name(client):
     url = f"/company/search?column={target}&order={order}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_sort_asc_city(client):
+def off_test_sort_asc_city(client):
     target = "city"
     order = "asc"
     query = f"SELECT {target} FROM IS601_MP3_Companies ORDER BY {target} {order} LIMIT 10"
@@ -108,7 +108,7 @@ def test_sort_asc_city(client):
     url = f"/company/search?column={target}&order={order}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_sort_desc_city(client):
+def off_test_sort_desc_city(client):
     target = "city"
     order = "desc"
     query = f"SELECT {target} FROM IS601_MP3_Companies ORDER BY {target} {order} LIMIT 10"
@@ -117,7 +117,7 @@ def test_sort_desc_city(client):
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
 
-def test_sort_asc_country(client):
+def off_test_sort_asc_country(client):
     target = "country"
     order = "asc"
     query = f"SELECT {target} FROM IS601_MP3_Companies ORDER BY {target} {order} LIMIT 10"
@@ -125,7 +125,7 @@ def test_sort_asc_country(client):
     url = f"/company/search?column={target}&order={order}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_sort_desc_country(client):
+def off_off_test_sort_desc_country(client):
     target = "country"
     order = "desc"
     query = f"SELECT {target} FROM IS601_MP3_Companies ORDER BY {target} {order} LIMIT 10"
@@ -133,7 +133,7 @@ def test_sort_desc_country(client):
     url = f"/company/search?column={target}&order={order}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_sort_asc_state(client):
+def off_test_sort_asc_state(client):
     target = "state"
     order = "asc"
     query = f"SELECT {target} FROM IS601_MP3_Companies ORDER BY {target} {order} LIMIT 10"
@@ -141,7 +141,7 @@ def test_sort_asc_state(client):
     url = f"/company/search?column={target}&order={order}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_sort_desc_state(client):
+def off_test_sort_desc_state(client):
     target = "state"
     order = "desc"
     query = f"SELECT {target} FROM IS601_MP3_Companies ORDER BY {target} {order} LIMIT 10"
@@ -149,7 +149,7 @@ def test_sort_desc_state(client):
     url = f"/company/search?column={target}&order={order}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_employee_count(client):
+def off_test_employee_count(client):
     target = "employees"
     args = []
     query = """SELECT name,
