@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.fixture()
-def off_app():
+def app():
     from ..main import create_app
     from ..sql.db import DB
     app = create_app()
@@ -32,12 +32,12 @@ def off_app():
     # clean up / reset resources here
 
 @pytest.fixture()
-def off_client(app):
+def client(app):
     return app.test_client()
 
 
 @pytest.fixture()
-def off_runner(app):
+def runner(app):
     return app.test_cli_runner()
 
 #https://pypi.org/project/pytest-order/
