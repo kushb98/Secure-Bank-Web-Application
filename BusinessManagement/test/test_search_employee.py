@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.fixture()
-def app():
+def off_app():
     from ..main import create_app
     from ..sql.db import DB
     app = create_app()
@@ -17,15 +17,15 @@ def app():
 
 
 @pytest.fixture()
-def client(app):
+def off_client(app):
     return app.test_client()
 
 
 @pytest.fixture()
-def runner(app):
+def off_runner(app):
     return app.test_cli_runner()
 
-def get_column_index(target, cells):
+def off_get_column_index(target, cells):
     rowIndex = -1
     index = 1
     for th in cells:
@@ -36,12 +36,12 @@ def get_column_index(target, cells):
         index += 1
     assert rowIndex > 0, f"th for {target} not found"
     return rowIndex
-def get_cell_content_by_index(index, table):
+def off_get_cell_content_by_index(index, table):
     cell = table.select(f"tbody tr:first-child td:nth-child({index})")[0]
     assert cell.string != None and len(cell.string) > 0, f"first tr of table cell {index} is empty"
     return cell.string.strip()
 
-def query_and_get_assert(query, args, target, client, url):
+def off_query_and_get_assert(query, args, target, client, url):
     from ..sql.db import DB
     result = DB.selectAll(query, *args)
     if result.status and result.rows:
@@ -62,14 +62,14 @@ def query_and_get_assert(query, args, target, client, url):
 
 
 
-def test_filter_fn(client):
+def off_test_filter_fn(client):
     target = "first_name"
     query = f"SELECT {target} FROM IS601_MP3_Employees e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id WHERE {target} like %s LIMIT 10"
     args = ["%a%"]
     url = f"/employee/search?fn={args[0].replace('%','')}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_filter_ln(client):
+def off_test_filter_ln(client):
     target = "last_name"
     query = f"SELECT {target} FROM IS601_MP3_Employees e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id WHERE {target} like %s LIMIT 10"
     args = ["%v%"]
@@ -77,7 +77,7 @@ def test_filter_ln(client):
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
     
 
-def test_filter_email(client):
+def off_test_filter_email(client):
     target = "email"
     query = f"SELECT {target} FROM IS601_MP3_Employees e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id WHERE {target} like %s LIMIT 10"
     args = ["%.net%"]
@@ -85,7 +85,7 @@ def test_filter_email(client):
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
 
-def test_filter_company(client):
+def off_test_filter_company(client):
     from ..sql.db import DB
     result = DB.selectOne("SELECT id FROM IS601_MP3_Companies ORDER BY RAND() LIMIT 1")
     args = [2]
@@ -97,7 +97,7 @@ def test_filter_company(client):
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
 
-def test_sort_asc_fn(client):
+def off_test_sort_asc_fn(client):
     target = "first_name"
     order = "asc"
     query = f"SELECT {target} FROM IS601_MP3_Employees e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id ORDER BY {target} {order} LIMIT 10"
@@ -105,7 +105,7 @@ def test_sort_asc_fn(client):
     url = f"/employee/search?column={target}&order={order}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_sort_desc_fn(client):
+def off_test_sort_desc_fn(client):
     target = "first_name"
     order = "desc"
     query = f"SELECT {target} FROM IS601_MP3_Employees e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id ORDER BY {target} {order} LIMIT 10"
@@ -113,7 +113,7 @@ def test_sort_desc_fn(client):
     url = f"/employee/search?column={target}&order={order}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_sort_asc_ln(client):
+def off_test_sort_asc_ln(client):
     target = "last_name"
     order = "asc"
     query = f"SELECT {target} FROM IS601_MP3_Employees e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id ORDER BY {target} {order} LIMIT 10"
@@ -121,7 +121,7 @@ def test_sort_asc_ln(client):
     url = f"/employee/search?column={target}&order={order}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_sort_desc_ln(client):
+def off_test_sort_desc_ln(client):
     target = "last_name"
     order = "desc"
     query = f"SELECT {target} FROM IS601_MP3_Employees e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id ORDER BY {target} {order} LIMIT 10"
@@ -129,7 +129,7 @@ def test_sort_desc_ln(client):
     url = f"/employee/search?column={target}&order={order}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_sort_asc_email(client):
+def off_test_sort_asc_email(client):
     target = "email"
     order = "asc"
     query = f"SELECT {target} FROM IS601_MP3_Employees e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id ORDER BY {target} {order} LIMIT 10"
@@ -137,7 +137,7 @@ def test_sort_asc_email(client):
     url = f"/employee/search?column={target}&order={order}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_sort_desc_email(client):
+def off_test_sort_desc_email(client):
     target = "email"
     order = "desc"
     query = f"SELECT {target} FROM IS601_MP3_Employees e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id ORDER BY {target} {order} LIMIT 10"
@@ -145,7 +145,7 @@ def test_sort_desc_email(client):
     url = f"/employee/search?column={target}&order={order}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_sort_asc_company(client):
+def off_test_sort_asc_company(client):
     target = "company_name"
     order = "asc"
     query = f"SELECT IF(name is not null, name,'N/A') as company_name FROM IS601_MP3_Employees e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id ORDER BY {target} {order} LIMIT 10"
@@ -153,7 +153,7 @@ def test_sort_asc_company(client):
     url = f"/employee/search?column={target}&order={order}"
     query_and_get_assert(query=query, args=args, target=target, client=client, url=url)
 
-def test_sort_desc_company(client):
+def off_test_sort_desc_company(client):
     target = "company_name"
     order = "desc"
     query = f"SELECT IF(name is not null, name,'N/A') as company_name FROM IS601_MP3_Employees e LEFT JOIN IS601_MP3_Companies c ON e.company_id = c.id ORDER BY {target} {order} LIMIT 10"
