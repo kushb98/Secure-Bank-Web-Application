@@ -9,8 +9,7 @@ def search():
     # TODO search-1 retrieve id, name, address, city, country, state, zip, website, employee count as employees for the company
     # don't do SELECT *
 
-    query = """SELECT id, name, address, city, country , state, zip, website, (SELECT count(id) FROM IS601_MP3_Employees WHERE c.id=company_id GROUP BY company_id)
-        as employees from IS601_MP3_Companies as c WHERE 1=1"""
+    query = """SELECT id, name, address, city, country , state, zip, website from IS601_MP3_Companies WHERE 1=1"""
     args = {} # <--- add values to replace %s/%(named)s placeholders
     allowed_columns = ["name", "city", "country", "state"]
     # TODO search-2 get name, country, state, column, order, limit request args
@@ -218,3 +217,25 @@ def edit():
             flash("Error occured! The data cannot be retrived", "danger")
     # TODO edit-13 pass the company data to the render template
     return render_template("edit_company.html",company=row)
+
+@company.route("/delete", methods=["GET"])
+def delete():
+    # TODO delete-1 delete company by id (unallocate any employees)
+    id = request.args.get("id")
+    try:
+        result = DB.update(f"UPDATE IS601_MP3_Employees SET company_id=NULL WHERE company_id={id}")
+        if result.status:
+            flash("Successfully unallocated employees in the company", "success")
+        result1 = DB.delete(f"DELETE FROM IS601_MP3_Companies WHERE id={id}")    
+        if result1.status:
+            flash("Successfully deleted the company", "success")
+    except Exception as e:
+        flash("Their was and issue unallocating the employees or deleting the company","danger")
+        flash(str(e), "danger")
+
+    # TODO delete-2 redirect to company search
+    return redirect(url_for('company.search', name="", country="", state="",order="asc", column="", limit=10))
+    # TODO delete-3 pass all argument except id to this route
+    # TODO delete-4 ensure a flash message shows for successful delete
+    # TODO delete-5 for all employees assigned to this company set their company_id to None/null
+    # TODO delete-6 if id is missing, flash necessary message and redirect to search
