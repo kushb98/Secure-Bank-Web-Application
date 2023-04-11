@@ -117,7 +117,7 @@ def add():
             try:
                 result = DB.insertOne("INSERT INTO IS601_MP3_Companies (name,address,city,country,state,zip,website) VALUES (%s,%s,%s,%s,%s,%s,%s)",name,address,city,country,state,zip_code,website) # <-- TODO add-8 add query and add arguments
                 if result.status:
-                    flash("Company added successfully", "success")
+                    flash("Company added successfully!", "success")
             except Exception as e:
                 # TODO add-9 make message user friendly
                 flash("Something went wrong their was error creating the company","danger")

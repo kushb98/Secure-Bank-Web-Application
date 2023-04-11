@@ -9,14 +9,14 @@ def search():
     rows = []
     # DO NOT DELETE PROVIDED COMMENTS
     # TODO search-1 retrieve employee id as id, first_name, last_name, email, company_id, company_name using a LEFT JOIN
-    #UCID: kb97 Date: 9th April 2023
+    #UCID: kb97 Date: 8th April 2023
     query = """SELECT E.ID as id , first_name , last_name , company_id, email , C.name as Company_name 
                 FROM IS601_MP3_Employees E LEFT JOIN IS601_MP3_Companies C ON E.company_id = C.id WHERE 1=1 """
     args = {} # <--- add values to replace %s/%(named)s placeholders
     allowed_columns = ["first_name", "last_name", "email", "company_name"]
     
     # TODO search-2 get fn, ln, email, company, column, order, limit from request args
-    #UCID: kb97 Date: 9th April 2023
+    #UCID: kb97 Date: 8th April 2023
     fn =  request.args.get("fname")
     ln =  request.args.get("lname")
     email = request.args.get("email")
@@ -27,27 +27,27 @@ def search():
     
     employee_dict = {}
     # TODO search-3 append like filter for first_name if provided
-    #UCID: kb97 Date: 9th April 2023
+    #UCID: kb97 Date: 8th April 2023
     if(fn != ""):
         employee_dict["first_name"] = "%"+str(fn)+"%"
         query = query+ """ AND first_name like %(first_name)s """
     # TODO search-4 append like filter for last_name if provided
-    #UCID: kb97 Date: 9th April 2023
+    #UCID: kb97 Date: 8th April 2023
     if(ln != ""):
         employee_dict["last_name"] = "%"+str(ln)+"%"
         query= query+ """ AND last_name like %(last_name)s """
     # TODO search-5 append like filter for email if provided
-    #UCID: kb97 Date: 9th April 2023
+    #UCID: kb97 Date: 8th April 2023
     if(email != ""):
         employee_dict["email"] = email
         query= query+ """ AND email like %(email)s """
     # TODO search-6 append equality filter for company_id if provided
-    #UCID: kb97 Date: 9th April 2023
+    #UCID: kb97 Date: 8th April 2023
     if company_id:
         query = query+ """ AND company_id = %(company_id)s"""
         employee_dict["company_id"] = company_id
     # TODO search-7 append sorting if column and order are provided and within the allowed columns and order options (asc, desc)
-    #UCID: kb97 Date: 9th April 2023
+    #UCID: kb97 Date: 8th April 2023
     print("-------------------------------------------------------------------")
     print(col)
     print(order)
@@ -101,59 +101,38 @@ def search():
 def add():
     if request.method == "POST":
         # TODO add-1 retrieve form data for first_name, last_name, company, email
-        # ucid: kb97 Date: 8th April 2023
-        first_name = request.form.get("first_name", None)
-        last_name = request.form.get("last_name", None)
-        email = request.form.get("email", None)
-        company_id = request.form.get("company", None)
         # TODO add-2 first_name is required (flash proper error message)
-        # ucid: kb97 Date: 9th April 2023
-        if len(first_name) == 0:
-            flash("First Name field is required","warning")
         # TODO add-3 last_name is required (flash proper error message)
-        # ucid: kb97 Date: 9th April 2023
-        if len(last_name) == 0:
-            flash("Last Name field is required","warning")
         # TODO add-4 company (may be None)
-        # ucid: kb97 Date: 9th April 2023
-        if len(company_id) == 0:
-            flash("Company field is required","warning")
         # TODO add-5 email is required (flash proper error message)
-        # ucid: kb97 Date: 9th April 2023
-        if len(email) == 0:
-            flash("Email field is required","warning")
-        # TODO add-5a verify email is in the correct format
-        # ucid: kb97 Date: 9th April 2023
+        
+        fn = request.form.get("first_name")
+        ln = request.form.get("last_name")
+        company = request.form.get("company",None)
+        email = request.form.get("email")
+        if fn=="":
+            flash("First name is a required field!", "danger")
+            return redirect(url_for("employee.add"))
+        if ln=="":
+            flash("Last Name is a required field", "danger")
+            return redirect(url_for("employee.add"))
+        if email=="":
+            flash("Email is a required field", "danger")
+            return redirect(url_for("employee.add"))
+        
         email_regex = r"[^@]+@[^@]+\.[^@]+"
         if re.match(email_regex, email) is not None == False:
-            flash("Email is not in correct format.","warning")
-        
+            flash("Email is not in valid format!","warning")
+
         has_error = False # use this to control whether or not an insert occurs
-        
-        employee_dict={}
-        employee_dict["first_name"] = first_name
-        employee_dict["last_name"] = last_name
-        employee_dict["email"] = email
-        employee_dict["company_name"] = company_id
-        #print(company_id)
-        
         if not has_error:
             try:
-                result = DB.insertOne("""
-                    INSERT INTO IS601_MP3_Employees (first_name, last_name, email, company_id)
-                    VALUES (%(first_name)s, %(last_name)s, %(email)s, %(company_name)s)
-                    ON DUPLICATE KEY UPDATE first_name=%(first_name)s, 
-                    last_name = %(last_name)s, email = %(email)s, 
-                    company_id = %(company_name)s""",employee_dict
-                ) # <-- TODO add-6 add query and add arguments
-                # ucid: kb97 Date: 9th April 2023
+                result = DB.insertOne("INSERT INTO IS601_MP3_Employees (first_name, last_name,company_id,email) VALUES(%s, %s, %s, %s)",fn, ln,company,email) # <-- TODO add-6 add query and add arguments
                 if result.status:
-                    flash("Created Employee Record", "success")
+                    flash("Employee Record Created Successfully!", "success")
             except Exception as e:
-                # ucid: kb97 Date: 9th April 2023
                 # TODO add-7 make message user friendly
-                flash("Database Insertion Failed", "danger")
-                print(str(e))   
+                flash("Employee cannot be added", "danger")
     return render_template("add_employee.html")
 
 @employee.route("/edit", methods=["GET", "POST"])
