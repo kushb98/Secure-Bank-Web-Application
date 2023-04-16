@@ -109,7 +109,11 @@ def add():
         if len(country) == 0:
             has_error = True
             flash("Country is a required field!","warning")
-        # TODO add-7 website is not required
+        # TODO add-7 zipcode is required (flash proper error message)
+        if len(zip_code) == 0:
+            has_error = True
+            flash("Zipcode is a required field!","warning")    
+        # TODO add-8 website is not required
         flash("Website is an optional field","")
 
         if not has_error:
