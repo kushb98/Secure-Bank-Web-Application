@@ -9,8 +9,7 @@ def search():
     # TODO search-1 retrieve id, name, address, city, country, state, zip, website, employee count as employees for the company
     # don't do SELECT *
 
-    query = """SELECT id, name, address, city, country , state, zip, website, (SELECT count(id) FROM IS601_MP3_Employees WHERE c.id=company_id GROUP BY company_id)
-        as employees from IS601_MP3_Companies as c WHERE 1=1"""
+    query = """SELECT id, name, address, city, country , state, zip, website from IS601_MP3_Companies WHERE 1=1"""
     args = {} # <--- add values to replace %s/%(named)s placeholders
     allowed_columns = ["name", "city", "country", "state"]
     # TODO search-2 get name, country, state, column, order, limit request args
@@ -110,7 +109,11 @@ def add():
         if len(country) == 0:
             has_error = True
             flash("Country is a required field!","warning")
-        # TODO add-7 website is not required
+        # TODO add-7 zipcode is required (flash proper error message)
+        if len(zip_code) == 0:
+            has_error = True
+            flash("Zipcode is a required field!","warning")    
+        # TODO add-8 website is not required
         flash("Website is an optional field","")
 
         if not has_error:
@@ -239,6 +242,4 @@ def delete():
     # TODO delete-3 pass all argument except id to this route
     # TODO delete-4 ensure a flash message shows for successful delete
     # TODO delete-5 for all employees assigned to this company set their company_id to None/null
-    # TODO delete-6 if id is missing, flash necessary message and redirect to search
-    pass
-    
+    # TODO delete-6 if id is missing, flash necessary message and redirect to search
