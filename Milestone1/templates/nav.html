@@ -38,6 +38,18 @@
                 ] %}
                 {{dropdown_nav("Roles", roles)}}
                 {% endif %}
+
+                <!-- accounts nav -->
+                {% set accounts = [
+                    ("accounts.create", "Create Account"),
+                    ("accounts.list", "My Accounts"),
+                    ("accounts.deposit", "Deposit"),
+                    ("accounts.withdraw", "Withdraw"),
+                    ("accounts.transfer", "Transfer"),
+                    ("accounts.ext_transfer", "Profile"),
+                    ] %}
+                    {{dropdown_nav("Accounts", accounts)}}
+                
                 <li class="nav-item">
                     <a class="nav-link" href="{{url_for('auth.logout')}}">Logout</a>
                 </li>
