@@ -11,3 +11,14 @@ class CreateAccountForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+class DepositWithdrawForm(FlaskForm):
+    account = SelectField("Account", choices=[], validators=[DataRequired()])
+    funds = FloatField("Funds", validators=[InputRequired(),NumberRange(min=1)])
+    memo = TextAreaField ("Memo", validators=[])
+    submit = SubmitField("Submit")
+
+    def __init__(self, accounts=None):
+        super().__init__()  # calls the base initialisation and then...
+        if accounts: 
+            self.account.choices = [(c['id'], f"{c['account_type']} Account - {c['account_number']}") for c in accounts]        
