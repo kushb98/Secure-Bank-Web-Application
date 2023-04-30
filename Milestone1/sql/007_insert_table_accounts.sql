@@ -7,11 +7,23 @@ INSERT IGNORE INTO
     )
 VALUES (-1,'system_kb97@mail.com', 'system_kb97', '$2b$12$wRt2/iPKMDy3XQ1rDL1eg.8bnl5AG3KD2jWOW48Qnsb/oAYHG/xHC');
 
-INSERT IGNORE INTO
-    IS601_K_Accounts (
+INSERT INTO
+    IS601_Accounts (
         id,
         account_number, 
         account_type,
         user_id
     )
-VALUES (-1,'000000000000', 'World', -1);
+VALUES (1,'000000000000', 'World', -1);
+
+INSERT IGNORE INTO
+    IS601_Transactions (
+        id,
+        account_src, 
+        account_dest, 
+        balance_change,
+        transaction_type,
+        memo,
+        expected_total
+    )
+VALUES (1, 1, 1, 999999999, 'Deposit', 'Start Deposit', 999999999);
