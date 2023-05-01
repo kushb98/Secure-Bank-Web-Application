@@ -3,7 +3,7 @@ import datetime
 from flask import Blueprint, flash, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
 from sql.db import DB
-from accounts.forms import CreateAccountForm, DepositWithdrawForm #TransferForm
+from accounts.forms import CreateAccountForm, DepositWithdrawForm, TransferForm
 from werkzeug.datastructures import MultiDict
 accounts = Blueprint('accounts', __name__, url_prefix='/accounts',template_folder='templates')
 
@@ -202,6 +202,40 @@ def withdraw():
 @accounts.route("/transfer", methods=["GET","POST"])
 @login_required
 def transfer():
+    user_id = current_user.get_id()
+    rows = [] 
+    try:
+        result = DB.selectAll("SELECT id, account_number, account_type, modified, balance FROM IS601_Accounts WHERE user_id=%s LIMIT 100", user_id)
+        if result.status and result.rows:
+            rows = result.rows
+    except Exception as e:
+        print(e)
+
+    form = TransferForm(accounts=rows)
+    if form.validate_on_submit():
+        if form.account_src.data == form.account_dest.data:
+            flash("Transfer between same accounts is not allowed!", "danger")
+            return render_template("transfer_form.html", form=form)
+
+        src_expected_total = expected_balance(form.account_src.data, form.funds.data*-1)
+        if src_expected_total < 0:
+            flash("Amount you are trying to transfer exceeds balance of account!", "danger")
+            return render_template("transfer_form.html", form=form)
+
+        trans1 = DB.insertOne("INSERT INTO IS601_Transactions (account_src, account_dest, balance_change, expected_total, transaction_type, memo) VALUES (%s, %s, %s, %s, %s, %s)",
+        form.account_src.data, form.account_dest.data, form.funds.data*-1, src_expected_total, "Transfer", form.memo.data)
+
+        dst_expected_total = expected_balance(form.account_dest.data, form.funds.data)
+        trans2 = DB.insertOne("INSERT INTO IS601_Transactions (account_src, account_dest, balance_change, expected_total, transaction_type, memo) VALUES (%s, %s, %s, %s, %s, %s)",
+        form.account_dest.data, form.account_src.data, form.funds.data, dst_expected_total, "Transfer", form.memo.data)
+
+        # Calculate what the expected total would be for each account of the transaction pair
+        refresh_account(form.account_dest.data)
+        refresh_account(form.account_src.data)
+
+        form = TransferForm(accounts=rows)
+        flash(f"Transfer of ${form.funds.data} from account number {form.account_src.data} to {form.account_dest.data} was successful!", "success")
+
     return render_template("transfer_form.html", form=form)
 
 @accounts.route("/profile", methods=["GET","POST"])
