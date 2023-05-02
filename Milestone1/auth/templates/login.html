@@ -2,13 +2,19 @@
 {% block title %}Login{% endblock %}
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
-<div class="container-fluid">
-    <div class="h3">Login</div>
+<div class="container-fluid d-flex flex-column align-items-center justify-content-center">
+    <div class="h1 text-center">Welcome to Simple Bank</div>
+    <div class="my-5">
+        <img height="50" src = "https://static.vecteezy.com/system/resources/thumbnails/008/505/801/small_2x/bitcoin-logo-color-illustration-png.png" alt = "" >
+    </div>
+    
+    <div class="h2 text-center">LOGIN</div>
     <form method="POST">
         {{ form.hidden_tag() }}
         {{render_field(form.email)}}
         {{render_field(form.password)}}
-        {{form.submit(class="btn btn-primary")}}
+        <div class=text-center>{{form.submit(class="btn btn-primary mt-3 ")}}</div>
+        
     </form>
 </div>
-{% endblock %}
+{% endblock %}     
