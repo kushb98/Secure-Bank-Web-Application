@@ -3,7 +3,7 @@ import datetime
 from flask import Blueprint, flash, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
 from sql.db import DB
-from accounts.forms import CreateAccountForm, DepositWithdrawForm, TransferForm
+from accounts.forms import CreateAccountForm, DepositWithdrawForm, TransferForm, ExtTransferForm
 from werkzeug.datastructures import MultiDict
 accounts = Blueprint('accounts', __name__, url_prefix='/accounts',template_folder='templates')
 
@@ -238,7 +238,59 @@ def transfer():
 
     return render_template("transfer_form.html", form=form)
 
-@accounts.route("/profile", methods=["GET","POST"])
+@accounts.route("/ext_transfer", methods=["GET","POST"])
 @login_required
 def ext_transfer():
-    return render_template("profile.html", form=form)
+    user_id = current_user.get_id()
+    rows = [] 
+    try:
+        result = DB.selectAll("SELECT id, account_number, account_type, modified, balance FROM IS601_Accounts WHERE user_id=%s LIMIT 100", user_id)
+        if result.status and result.rows:
+            rows = result.rows
+    except Exception as e:
+        print(e)
+
+    form = ExtTransferForm(accounts=rows)
+    if form.validate_on_submit():
+        src_expected_total = expected_balance(form.account_src.data, form.funds.data*-1)
+        if src_expected_total < 0:
+            flash("Amount being transferred exceeds balance!", "danger")
+            return render_template("ext_transfer_form.html", form=form)
+
+        dest_user_account = DB.selectOne("SELECT id, account_number, user_id FROM IS601_Accounts WHERE RIGHT(account_number,4) LIKE %s LIMIT 1", form.account_dest.data)
+        if dest_user_account.status and dest_user_account.row:
+            try:
+                dest_user_id = dest_user_account.row['user_id']
+            except:
+                flash("User account not found!", "danger")
+                return render_template("ext_transfer_form.html", form=form)
+
+        dest_user = DB.selectOne("SELECT id FROM IS601_Users WHERE last_name LIKE %s AND id=%s LIMIT 1", form.last_name.data, dest_user_id)
+        try:
+            dest_user.row['id']
+        except:
+            flash("User account not found!", "danger")
+            return render_template("ext_transfer_form.html", form=form)
+
+        if dest_user_id == user_id:
+            flash("Transfer should be external", "danger")
+            return render_template("transfer_form.html", form=form)
+
+        dest_account_id = dest_user_account.row['id']
+
+        trans1 = DB.insertOne("INSERT INTO IS601_Transactions (account_src, account_dest, balance_change, expected_total, transaction_type, memo) VALUES (%s, %s, %s, %s, %s, %s)",
+        form.account_src.data, dest_account_id, form.funds.data*-1, src_expected_total, "Ext-Transfer", form.memo.data)
+
+        dst_expected_total = expected_balance(dest_account_id, form.funds.data)
+        trans2 = DB.insertOne("INSERT INTO IS601_Transactions (account_src, account_dest, balance_change, expected_total, transaction_type, memo) VALUES (%s, %s, %s, %s, %s, %s)",
+        dest_account_id, form.account_src.data, form.funds.data, dst_expected_total, "Ext-Transfer", form.memo.data)
+
+        # Calculate what the expected total would be for each account of the transaction pair
+        refresh_account(dest_account_id)
+        refresh_account(form.account_src.data)
+
+        form = ExtTransferForm(accounts=rows)
+        flash(f"Successfully Transferred ${form.funds.data} to {form.last_name.data} - Account number {dest_user_account.row['account_number']}.", "success")
+
+
+    return render_template("ext_transfer_form.html", form=form)
