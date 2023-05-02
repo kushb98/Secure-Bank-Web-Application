@@ -1,8 +1,11 @@
 {% extends "layout.html" %}
 {% block title %}Landing Page{% endblock %}
 {% block content %}
-<div class="container-fluid">
-    <div class="h3">Welcome</div>
-    {{current_user.username}}
+<div class="container-fluid text-center d-flex flex-column align-items-center justify-content-center">
+    <div class="h1">Welcome to Simple Bank</div>
+    <div class="my-5">
+        <img height="50" src="https://static.vecteezy.com/system/resources/thumbnails/008/505/801/small_2x/bitcoin-logo-color-illustration-png.png" alt="">
+    </div>
+    <div class="h3">Logged in as {{ current_user.first_name }} {{current_user.last_name}}</div>
 </div>
 {% endblock %}
