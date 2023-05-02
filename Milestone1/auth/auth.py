@@ -13,7 +13,7 @@ from flask_principal import Identity, AnonymousIdentity, \
 from email_validator import validate_email
 
 auth = Blueprint('auth', __name__, url_prefix='/',template_folder='templates')
-
+#UCID - kb97 
 
 @auth.route("/register", methods=["GET","POST"])
 def register():
@@ -23,10 +23,12 @@ def register():
         email = form.email.data
         password = form.password.data
         username = form.username.data
+        first_name = form.first_name.data
+        last_name = form.last_name.data
         try:
             hash = bcrypt.generate_password_hash(password)
             # save the hash, not the plaintext password
-            result = DB.insertOne("INSERT INTO IS601_Users (email, username, password) VALUES (%s, %s, %s)", email, username, hash)
+            result = DB.insertOne("INSERT INTO IS601_Users (email, username, password, first_name, last_name) VALUES (%s, %s, %s, %s, %s)", email, username, hash, first_name, last_name)
             if result.status:
                 flash("Successfully registered","success")
         except Exception as e:
@@ -55,7 +57,7 @@ def login():
         password = form.password.data
         if is_valid:
             try:
-                result = DB.selectOne("SELECT id, email, username, password FROM IS601_Users where email= %(email)s or username=%(email)s", {"email":email})
+                result = DB.selectOne("SELECT id, email, username, first_name, last_name, password FROM IS601_Users where email= %(email)s or username=%(email)s", {"email":email})
                 if result.status and result.row:
                     hash = result.row["password"]
                     if bcrypt.check_password_hash(hash, password):
@@ -121,6 +123,8 @@ def profile():
         is_valid = True
         email = form.email.data
         username = form.username.data
+        first_name = form.first_name.data
+        last_name = form.last_name.data
         import re
         r = re.fullmatch("/^[a-z0-9_-]{2,30}$/", username)
         if r:
@@ -151,14 +155,14 @@ def profile():
         
         if is_valid:
             try: # update email, username (this will trigger if nothing changed but it's fine)
-                result = DB.update("UPDATE IS601_Users SET email = %s, username = %s WHERE id = %s", email, username, user_id)
+                result = DB.update("UPDATE IS601_Users SET email = %s, username = %s, first_name = %s, last_name = %s WHERE id = %s", email, username, first_name, last_name, user_id)
                 if result.status:
                     flash("Saved profile", "success")
             except Exception as e:
                 flash(e, "danger")
     try:
         # get latest info if anything changed
-        result = DB.selectOne("SELECT id, email, username FROM IS601_Users where id = %s", user_id)
+        result = DB.selectOne("SELECT id, email, username, first_name, last_name FROM IS601_Users where id = %s", user_id)
         if result.status and result.row:
             user = User(**result.row)
             form = ProfileForm(obj=user)
