@@ -13,7 +13,7 @@ from flask_principal import Identity, AnonymousIdentity, \
 from email_validator import validate_email
 
 auth = Blueprint('auth', __name__, url_prefix='/',template_folder='templates')
-
+#UCID - kb97 
 
 @auth.route("/register", methods=["GET","POST"])
 def register():
