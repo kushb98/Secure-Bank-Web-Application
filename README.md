@@ -2,7 +2,7 @@
 It is a web-based banking application developed using Python, Flask, and Jinja, this robust application boasts a suite of key functionalities, ensuring a secure, efficient, and user-friendly banking experience.
 
 <p align="center">
-  <img src="path/to/your/image.jpg" alt="Description of the image" width="300">
+  <img src="flask_sample/simple_bank.png" alt="Simple Bank" width="300">
 </p>
 
 Applications:
